@@ -1,7 +1,7 @@
 import numpy as np
 
 class Kmeans:
-    def __init__(self, k, max_iters=100, n_init=10):
+    def __init__(self, k, max_iters=100, n_init=100):
     # k = número de clusters, max_iters = limite de iterações para não rodar pra sempre
         self.k = k
         self.max_iters = max_iters
