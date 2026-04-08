@@ -26,7 +26,7 @@ class Kmeans:
 
             # atualização: recalcula cada centroide como a media dos pontos do cluster
             for i in range(self.k):
-                points_values = [X[clusters == i]]
+                points_values = X[clusters == i]
                 self.centroids[i] = np.mean(points_values, axis=0)
             #se os centroides não mudaram, o algoritmo convergiu
             if np.allclose(prev_centroids, self.centroids): break
