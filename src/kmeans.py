@@ -27,4 +27,10 @@ class Kmeans:
 
 
     def predict(self, X):
-        pass
+        n_samples = X.shape[0]
+
+        clusters = np.zeros(n_samples, dtype=int)
+        for i in range(n_samples):
+            distances = np.linalg.norm(X[i] - self.centroids, axis=1)
+            clusters[i] = np.argmin(distances)
+        return clusters
