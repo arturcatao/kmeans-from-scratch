@@ -10,8 +10,7 @@ class Kmeans:
         n_samples = X.shape[0]
     
         # escolhe k pontos aleatorios do dataset como centroides iniciais
-        random_idx = np.random.choice(n_samples, self.k, replace=False)
-        self.centroids = X[random_idx]
+        self.centroids = self._init_centroids_plusplus(X)
 
         for _ in range(self.max_iters):
             # atribuição: para cada ponto, encontra o centroide mais próximo
@@ -41,3 +40,14 @@ class Kmeans:
             distances = np.linalg.norm(X[i] - self.centroids, axis=1)
             clusters[i] = np.argmin(distances)
         return clusters
+    
+    def _init_centroids_plusplus(self, X):
+        random_idx = np.random.randint(0, X.shape[0])
+        centroids = [X[random_idx]]
+
+        for i in range(1, self.k):
+            distances = np.min([np.linalg.norm(X - centroid, axis=1) for centroid in centroids], axis=0)
+            probabilities = distances / distances.sum()
+            new_idx = np.random.choice(len(X), p=probabilities)
+            centroids.append(X[new_idx])
+        return np.array(centroids)
