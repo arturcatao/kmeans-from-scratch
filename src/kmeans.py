@@ -1,34 +1,47 @@
 import numpy as np
 
 class Kmeans:
-    def __init__(self, k, max_iters=100):
+    def __init__(self, k, max_iters=100, n_init=10):
     # k = número de clusters, max_iters = limite de iterações para não rodar pra sempre
         self.k = k
         self.max_iters = max_iters
+        self.n_init = n_init
 
     def fit(self, X):
-        n_samples = X.shape[0]
-    
-        # escolhe k pontos aleatorios do dataset como centroides iniciais
-        self.centroids = self._init_centroids_plusplus(X)
+        inertia = float("+inf")
+        
+        for i in range(self.n_init):
 
-        for _ in range(self.max_iters):
-            # atribuição: para cada ponto, encontra o centroide mais próximo
-            clusters = np.zeros(n_samples, dtype=int)
-            for i in range(n_samples):
-                distances = np.linalg.norm(X[i] - self.centroids, axis=1)
-                clusters[i] = np.argmin(distances)
-            self.clusters = clusters
+            n_samples = X.shape[0]
 
-            # guarda os centroides antes de atualizar para checar convergência
-            prev_centroids = self.centroids[:]
+            # escolhe k pontos aleatorios do dataset como centroides iniciais
+            centroids = self._init_centroids_plusplus(X)
 
-            # atualização: recalcula cada centroide como a media dos pontos do cluster
-            for i in range(self.k):
-                points_values = X[clusters == i]
-                self.centroids[i] = np.mean(points_values, axis=0)
-            #se os centroides não mudaram, o algoritmo convergiu
-            if np.allclose(prev_centroids, self.centroids): break
+            for _ in range(self.max_iters):
+                # atribuição: para cada ponto, encontra o centroide mais próximo
+                clusters = np.zeros(n_samples, dtype=int)
+                for j in range(n_samples):
+                    distances = np.linalg.norm(X[j] - centroids, axis=1)
+                    clusters[j] = np.argmin(distances)
+
+                # guarda os centroides antes de atualizar para checar convergência
+                prev_centroids = centroids[:]
+
+                # atualização: recalcula cada centroide como a media dos pontos do cluster
+                for j in range(self.k):
+                    points_values = X[clusters == j]
+                    centroids[j] = np.mean(points_values, axis=0)
+                #se os centroides não mudaram, o algoritmo convergiu
+                if np.allclose(prev_centroids, centroids): break
+            
+            # escolhe a melhor combinação para o melhor modelo
+            current_inertia = self._inertia(X, clusters, centroids) 
+            if current_inertia < inertia:
+                inertia = current_inertia
+                self.centroids = centroids
+                self.clusters = clusters
+
+
 
 
     def predict(self, X):
@@ -51,3 +64,10 @@ class Kmeans:
             new_idx = np.random.choice(len(X), p=probabilities)
             centroids.append(X[new_idx])
         return np.array(centroids)
+    
+    def _inertia(self, X, clusters, centroids):
+        #faz com que o fit escolha a melhor combinação
+        soma = 0
+        for i in range(X.shape[0]):
+            soma += np.sum((X[i] - centroids[clusters[i]]) ** 2)
+        return soma
