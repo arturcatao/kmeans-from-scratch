@@ -154,17 +154,15 @@ Future improvements planned for this project include:
 
 ---
 
-# Project Structure
-kmeans-from-scratch
-│
-├── src
-│ └── kmeans.py
-│
-├── notebooks
-│ └── exploratory_data_analysis.ipynb
-│
+## Project Structure
+```
+kmeans-from-scratch/
+├── src/
+│   └── kmeans.py
+├── notebooks/
+│   └── exploratory_data_analysis.ipynb
 └── README.md
-
+```
 
 ---
 
