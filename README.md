@@ -169,6 +169,7 @@ kmeans-from-scratch/
 # Technologies Used
 
 - Python
+- Pandas
 - NumPy
 - Matplotlib
 - Jupyter Notebook
