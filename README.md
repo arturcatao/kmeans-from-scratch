@@ -52,11 +52,7 @@ This dataset is widely used for **customer segmentation tasks**, where clusterin
 
 ### Source
 
-The dataset used in this repository was loaded from:
-
-https://raw.githubusercontent.com/gakudo-ai/open-datasets/refs/heads/main/Mall_Customers.csv
-
-Original dataset versions are also commonly distributed through the Kaggle community as the **Mall Customers Dataset**.
+The dataset used in this repository was loaded from [Kaggle](https://www.kaggle.com/datasets/vjchoudhary7/customer-segmentation-tutorial-in-python), originally known as the **Mall Customers Dataset**.
 
 ### License
 
