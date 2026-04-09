@@ -1,20 +1,25 @@
 import numpy as np
 
 class Kmeans:
-    def __init__(self, k, max_iters=100, n_init=100):
+    def __init__(self, k=None, max_iters=100, n_init=100, minK=1, maxK=10):
     # k = número de clusters, max_iters = limite de iterações para não rodar pra sempre
         self.k = k
         self.max_iters = max_iters
         self.n_init = n_init
+        self.minK = minK
+        self.maxK = maxK
 
     def fit(self, X):
         inertia = float("+inf")
+        
+        if self.k == None: self.k = self._find_best_k(X)
         
         for i in range(self.n_init):
 
             n_samples = X.shape[0]
 
             # escolhe k pontos aleatorios do dataset como centroides iniciais
+
             centroids = self._init_centroids_plusplus(X)
 
             for _ in range(self.max_iters):
@@ -25,7 +30,7 @@ class Kmeans:
                     clusters[j] = np.argmin(distances)
 
                 # guarda os centroides antes de atualizar para checar convergência
-                prev_centroids = centroids[:]
+                prev_centroids = centroids.copy()
 
                 # atualização: recalcula cada centroide como a media dos pontos do cluster
                 for j in range(self.k):
@@ -40,6 +45,7 @@ class Kmeans:
                 inertia = current_inertia
                 self.centroids = centroids
                 self.clusters = clusters
+                self.inertia = inertia
 
 
 
@@ -57,7 +63,7 @@ class Kmeans:
     def _init_centroids_plusplus(self, X):
         random_idx = np.random.randint(0, X.shape[0])
         centroids = [X[random_idx]]
-
+        
         for i in range(1, self.k):
             distances = np.min([np.linalg.norm(X - centroid, axis=1) for centroid in centroids], axis=0)
             probabilities = distances / distances.sum()
@@ -71,3 +77,16 @@ class Kmeans:
         for i in range(X.shape[0]):
             soma += np.sum((X[i] - centroids[clusters[i]]) ** 2)
         return soma
+    
+    def _find_best_k(self, X):
+        inertias = []
+        for k in range(self.minK, self.maxK + 1):
+            model = Kmeans(k=k)
+            model.fit(X)
+            inertias.append(model.inertia)
+        
+        differences = np.diff(inertias)
+        second_diff = np.diff(differences)
+        best_k = self.minK + np.argmax(second_diff) + 2
+
+        return best_k
