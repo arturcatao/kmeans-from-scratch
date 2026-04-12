@@ -147,9 +147,6 @@ However, my automatic elbow detection approach **did not work reliably**.
 Future improvements planned for this project include:
 
 - Implementing a more reliable method for selecting **K**
-- Trying alternative cluster validation metrics such as:
-  - Silhouette Score
-  - Gap Statistic
 - Improving performance through **NumPy vectorization**
 
 ---
@@ -188,20 +185,3 @@ Building algorithms manually helps develop intuition about:
 - model evaluation
 
 ---
-
-# Future Work
-
-Possible extensions of this project include:
-
-- implementing **K-Means with full NumPy vectorization**
-- comparing results with the implementation from `scikit-learn`
-- implementing other clustering algorithms such as:
-  - DBSCAN
-  - Hierarchical Clustering
-  - Gaussian Mixture Models
-
----
-
-# Author
-
-Artur Catão
